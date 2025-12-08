@@ -37,14 +37,14 @@ export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
   email: '',
   age: 20,
   phone: '',
-  addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA},{...CUSTOMER_ADDRESS_INITIAL_DATA}]
+  addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA}, {...CUSTOMER_ADDRESS_INITIAL_DATA}]
 };
 
 export const lastNameSchema = schema<{ lastName: string }>((path) => {
-  required(path.lastName, { message: 'Soyad alanı zorunlu.' });
-  minLength(path.lastName, 2, { message: 'Soyad minimum 2 karakter olmalı.' });
-  maxLength(path.lastName, 255, { message: 'Soyad maksimum 255 karakter olmalı.' });
-  debounce(path.lastName,500)
+  required(path.lastName, {message: 'Soyad alanı zorunlu.'});
+  minLength(path.lastName, 2, {message: 'Soyad minimum 2 karakter olmalı.'});
+  maxLength(path.lastName, 255, {message: 'Soyad maksimum 255 karakter olmalı.'});
+  debounce(path.lastName, 500)
 });
 
 export const firstNameSchema = schema<CreateCustomerCommand>(path => {
@@ -57,12 +57,12 @@ export const firstNameSchema = schema<CreateCustomerCommand>(path => {
 export const ADDRESS_SCHEMA = schema<CreateCustomerAddressCommand>((path) => {
   required(path.countryId, {message: "Ülke seçiniz."});
   disabled(path.countryId, () => false);
-  required(path.city,{message:'Şehir seçiniz.'})
+  required(path.city, {message: 'Şehir seçiniz.'})
 })
 
 export const CUSTOMER_SCHEMA = schema<CreateCustomerCommand>((root) => {
   apply(root, firstNameSchema);
-  apply(root,lastNameSchema);
+  apply(root, lastNameSchema);
   email(root.email, {message: 'Email formatı hatalı.'});
   maxLength(root.phone, 10);
   applyEach(root.addresses, ADDRESS_SCHEMA)
