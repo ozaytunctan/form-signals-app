@@ -1,16 +1,22 @@
-import {Component, signal} from '@angular/core';
+import {Component, effect, signal} from '@angular/core';
 import {CREATE_CUSTOMER_INITIAL_DATA, CUSTOMER_SCHEMA} from './create-customer-command';
 import {Field, form} from '@angular/forms/signals';
-import {ValidationErrors} from '../../../shared/components/validation-errors/validation-errors';
-import {hasError} from '../../../core/utils/has-error';
+import {hasError} from 'ngExt/core/utils/has-error';
 import {JsonPipe} from '@angular/common';
+import {ValidationErrors} from '@ngExt/ui/validations';
+import {PhoneField} from '@ngExt/ui/inputs/phone-field/phone-field';
+import {FsOption, Listbox} from '@ngExt/ui/inputs/listbox/listbox';
+import {Country} from 'ngExt/core/models/country';
 
 @Component({
   selector: 'fs-customer-create-form',
   imports: [
-    ValidationErrors,
     Field,
-    JsonPipe
+    JsonPipe,
+    ValidationErrors,
+    PhoneField,
+    Listbox,
+    FsOption
   ],
   template: `
     <div class="p-5  w-full h-full">
@@ -56,8 +62,55 @@ import {JsonPipe} from '@angular/common';
               </div>
             </div>
 
+
+            <div class="flex items-center gap-4 mb-4">
+              <label class="w-32 text-sm font-medium text-gray-700">
+                Phone:
+              </label>
+              <div class="flex flex-col w-full">
+                <fs-phone-field
+                  class="flex-1"
+                  type="text"
+                  [field]="customerForm.phone"
+                  placeholder="(___) ___ __ __"
+                />
+                @if (hasError(customerForm.phone())) {
+                  <fs-validation-errors class="text-red-500"
+                                        [errors]="customerForm.phone().errors()"/>
+                }
+              </div>
+            </div>
+
+
+            <div>
+              Address List:
+              <div>
+                @for (addressForm of customerForm.addresses; track $index) {
+                  <div class="flex items-center gap-4 mb-4">
+                    <label class="w-32 text-sm font-medium text-gray-700">
+                      Country:
+                    </label>
+                    <div class="flex flex-col w-full">
+                      <fs-listbox [field]="addressForm.country">
+                        @for (country of countries; track country.id) {
+                          <fs-option [value]="country.id">{{ country.name }}</fs-option>
+                        }
+                      </fs-listbox>
+                      @if (hasError(addressForm.country())) {
+                        <fs-validation-errors class="text-red-500"
+                                              [errors]="addressForm.country().errors()"/>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+
             <button class="text-white bg-amber-600 px-6 py-2 cursor-pointer">Save</button>
           </div>
+
+
         </form>
 
         <div>
@@ -80,7 +133,18 @@ export class CustomerCreateForm {
   customerForm = form(this.customerModel, CUSTOMER_SCHEMA);
   protected readonly hasError = hasError;
 
-  handleSubmit(e:Event) {
+
+  countries: Country[] = [
+    {id: 1, name: 'Türkiye', code: '1'},
+    {id: 2, name: 'ABD', code: '2'}
+  ];
+
+
+  logFirstNameChanges = effect(() => {
+    console.log(this.customerForm.firstName().value());
+  })
+
+  handleSubmit(e: Event) {
     e.preventDefault();
     alert(JSON.stringify(this.customerForm().value()));
   }

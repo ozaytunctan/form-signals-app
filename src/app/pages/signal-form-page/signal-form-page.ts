@@ -15,7 +15,7 @@ import {JsonPipe} from '@angular/common';
 import {Address, AddressTitle} from '../../core/models/addresses.model';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {ValidationErrors} from '../../shared/components/validation-errors/validation-errors';
+import {ValidationErrors} from '../../shared/components/validations/validation-errors/validation-errors';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {Customer} from '../../core/models/customer.model';

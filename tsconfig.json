@@ -13,7 +13,16 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "baseUrl": "./src",
+    "paths": {
+      "ngExt/core/*": ["app/core/*"],
+      "@ngExt/ui/inputs/*": ["app/shared/components/inputs/*"],
+      "@ngExt/ui/validations": ["app/shared/components/validations/index"],
+      "@ngExt/ui/buttons/*": ["shared/components/buttons/*"],
+      "@ngExt/ui/forms/*": ["shared/components/forms/*"]
+    }
+
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,4 +1,4 @@
-import {apply, applyWhenValue, minLength, required, schema} from '@angular/forms/signals';
+import {apply, debounce, email, maxLength, minLength, required, schema, validate} from '@angular/forms/signals';
 
 export interface CreateCustomerCommand {
   firstName: string;
@@ -32,12 +32,18 @@ export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
 
 
 export const firstNameSchema = schema<CreateCustomerCommand>(path => {
-  required(path.firstName, {message: 'Ad alanı zorunlu'})
-  minLength(path.firstName, 4, {message: 'Ad alanı enaz 4 karakter olmalıdır.'})
+  required(path.firstName, {message: 'Ad alanı zorunlu'});
+  minLength(path.firstName, 4,{message:'Ad alanı minimum 4 karater girilmelidir.'});
+  maxLength(path.firstName, 255, {message: 'Ad alanına maksimum 255 karakter girilmelidir.'})
 });
 
 export const CUSTOMER_SCHEMA = schema<CreateCustomerCommand>((root) => {
-  applyWhenValue(root, c=>c.age>20,firstNameSchema)
+  // applyWhenValue(root, c => c.age > 20, firstNameSchema)
+  apply(root, firstNameSchema);
+  required(root.lastName, {message: 'Soyad alanı zorunlu.'})
+  debounce(root.lastName, 500);
+  email(root.email, {message: 'Email formatı hatalı.'});
+  maxLength(root.phone,10)
 });
 
 
