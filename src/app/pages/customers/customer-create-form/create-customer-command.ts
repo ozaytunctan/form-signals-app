@@ -1,4 +1,14 @@
-import {apply, debounce, email, maxLength, minLength, required, schema, validate} from '@angular/forms/signals';
+import {
+  apply,
+  applyEach,
+  debounce,
+  disabled,
+  email,
+  maxLength,
+  minLength,
+  required,
+  schema
+} from '@angular/forms/signals';
 
 export interface CreateCustomerCommand {
   firstName: string;
@@ -11,13 +21,13 @@ export interface CreateCustomerCommand {
 
 export interface CreateCustomerAddressCommand {
   city: string;
-  country: string;
+  countryId: number | null;
   zipcode: string;
 }
 
 export const CUSTOMER_ADDRESS_INITIAL_DATA: CreateCustomerAddressCommand = {
   city: '',
-  country: '',
+  countryId: null,
   zipcode: '',
 }
 
@@ -27,15 +37,22 @@ export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
   email: '',
   age: 20,
   phone: '',
-  addresses: [CUSTOMER_ADDRESS_INITIAL_DATA]
+  addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA},{...CUSTOMER_ADDRESS_INITIAL_DATA}]
 };
 
 
 export const firstNameSchema = schema<CreateCustomerCommand>(path => {
   required(path.firstName, {message: 'Ad alanı zorunlu'});
-  minLength(path.firstName, 4,{message:'Ad alanı minimum 4 karater girilmelidir.'});
+  minLength(path.firstName, 4, {message: 'Ad alanı minimum 4 karater girilmelidir.'});
   maxLength(path.firstName, 255, {message: 'Ad alanına maksimum 255 karakter girilmelidir.'})
 });
+
+
+export const ADDRESS_SCHEMA = schema<CreateCustomerAddressCommand>((path) => {
+  required(path.countryId, {message: "Ülke seçiniz."});
+  disabled(path.countryId, () => false);
+  required(path.city,{message:'Şehir seçiniz.'})
+})
 
 export const CUSTOMER_SCHEMA = schema<CreateCustomerCommand>((root) => {
   // applyWhenValue(root, c => c.age > 20, firstNameSchema)
@@ -43,7 +60,9 @@ export const CUSTOMER_SCHEMA = schema<CreateCustomerCommand>((root) => {
   required(root.lastName, {message: 'Soyad alanı zorunlu.'})
   debounce(root.lastName, 500);
   email(root.email, {message: 'Email formatı hatalı.'});
-  maxLength(root.phone,10)
+  maxLength(root.phone, 10);
+  applyEach(root.addresses, ADDRESS_SCHEMA)
 });
+
 
 

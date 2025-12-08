@@ -91,22 +91,24 @@ import {Country} from 'ngExt/core/models/country';
                       Country:
                     </label>
                     <div class="flex flex-col w-full">
-                      <fs-listbox [field]="addressForm.country">
+                      <fs-listbox [field]="addressForm.countryId">
                         @for (country of countries; track country.id) {
-                          <fs-option [value]="country.id">{{ country.name }}</fs-option>
+                          <fs-option
+                            [value]="country.id"
+                            [disabled]="country.disabled">{{ country.name }}
+                          </fs-option>
                         }
                       </fs-listbox>
-                      @if (hasError(addressForm.country())) {
-                        <fs-validation-errors class="text-red-500"
-                                              [errors]="addressForm.country().errors()"/>
+                      @if (hasError(addressForm.countryId())) {
+                        <fs-validation-errors
+                          class="text-red-500"
+                          [errors]="addressForm.countryId().errors()"/>
                       }
                     </div>
                   </div>
                 }
               </div>
             </div>
-
-
             <button class="text-white bg-amber-600 px-6 py-2 cursor-pointer">Save</button>
           </div>
 
@@ -117,6 +119,11 @@ import {Country} from 'ngExt/core/models/country';
           Customer:
           <pre>
             {{ customerForm().value()|json }}
+          </pre>
+          <br>
+          Errors:
+          <pre>
+            {{ customerForm().errorSummary()|json }}
           </pre>
         </div>
 
@@ -135,8 +142,8 @@ export class CustomerCreateForm {
 
 
   countries: Country[] = [
-    {id: 1, name: 'Türkiye', code: '1'},
-    {id: 2, name: 'ABD', code: '2'}
+    {id: 1, name: 'Türkiye', code: '1' ,disabled:false},
+    {id: 2, name: 'ABD', code: '2',disabled: true}
   ];
 
 

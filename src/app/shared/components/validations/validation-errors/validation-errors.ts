@@ -10,13 +10,10 @@ import {MatError} from '@angular/material/form-field';
   template: `
     @let _errors = errors();
     @if (_errors && _errors.length > 0) {
-      <div>
-        @for (error of _errors; track error) {
-          <mat-error>{{ error.message }}</mat-error>
-        }
-      </div>
+      @for (error of _errors; track error) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
     }
-
   `,
   styles: ``,
 })

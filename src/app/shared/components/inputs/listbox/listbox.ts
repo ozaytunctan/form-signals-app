@@ -1,4 +1,4 @@
-import {Component, contentChildren, input, model, output, signal, ViewEncapsulation} from '@angular/core';
+import {AfterContentInit, Component, computed, contentChildren, effect, inject, input, model} from '@angular/core';
 import {FormValueControl} from '@angular/forms/signals';
 
 @Component({
@@ -9,57 +9,36 @@ import {FormValueControl} from '@angular/forms/signals';
   `,
   styles: ``,
   host: {
-    'class': 'fs-listbox flex flex-col',
+    'class': 'fs-listbox'
   }
 })
 export class Listbox implements FormValueControl<any> {
   value = model<any>();
+  disabled = input<boolean>(false);
   options = contentChildren<FsOption>(FsOption);
-
-  ngAfterContentInit() {
-    this.options().forEach((option) => {
-      option.selectValue.subscribe(value => {
-        this.value.set(value);
-        this.options().forEach((option) => {
-          option.selected.set(option.value() === value);
-        })
-      });
-    })
-  }
-
 }
 
 
 @Component({
   selector: `fs-option`,
   template: `
-    <span class="list-option-item">
     <ng-content></ng-content>
-    </span>
   `,
-
-  styles: [`
-    .selected {
-      color: blue;
-    }
-  `],
   host: {
-    '(click)': 'onSelectOption()',
-    '[class.selected]': 'selected()',
-
-
-  },
-  encapsulation: ViewEncapsulation.None,
+    '(click)': 'selectOption()',
+    '[class.selected]': 'isSelected()'
+  }
 })
 export class FsOption {
-
+  private readonly _listbox = inject<Listbox>(Listbox);
   value = input<any>();
-  selected = signal<boolean>(false);
-  selectValue = output<any>();
-
-  onSelectOption() {
-    this.selected.set(true);
-    this.selectValue.emit(this.value());
+  disabled = input<boolean>(false);
+  isDisabled = computed(() => this.disabled() || this._listbox.disabled());
+  isSelected = computed(() => !this.isDisabled() && this._listbox.value() === this.value());
+  selectOption() {
+    if (!this.isDisabled()) {
+      this._listbox.value.set(this.value());
+    }
   }
 
 }
