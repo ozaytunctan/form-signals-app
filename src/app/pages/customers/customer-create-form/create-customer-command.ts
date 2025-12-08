@@ -40,6 +40,12 @@ export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
   addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA},{...CUSTOMER_ADDRESS_INITIAL_DATA}]
 };
 
+export const lastNameSchema = schema<{ lastName: string }>((path) => {
+  required(path.lastName, { message: 'Soyad alanı zorunlu.' });
+  minLength(path.lastName, 2, { message: 'Soyad minimum 2 karakter olmalı.' });
+  maxLength(path.lastName, 255, { message: 'Soyad maksimum 255 karakter olmalı.' });
+  debounce(path.lastName,500)
+});
 
 export const firstNameSchema = schema<CreateCustomerCommand>(path => {
   required(path.firstName, {message: 'Ad alanı zorunlu'});
@@ -55,10 +61,8 @@ export const ADDRESS_SCHEMA = schema<CreateCustomerAddressCommand>((path) => {
 })
 
 export const CUSTOMER_SCHEMA = schema<CreateCustomerCommand>((root) => {
-  // applyWhenValue(root, c => c.age > 20, firstNameSchema)
   apply(root, firstNameSchema);
-  required(root.lastName, {message: 'Soyad alanı zorunlu.'})
-  debounce(root.lastName, 500);
+  apply(root,lastNameSchema);
   email(root.email, {message: 'Email formatı hatalı.'});
   maxLength(root.phone, 10);
   applyEach(root.addresses, ADDRESS_SCHEMA)

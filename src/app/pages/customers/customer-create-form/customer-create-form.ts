@@ -86,6 +86,7 @@ import {Country} from 'ngExt/core/models/country';
               Address List:
               <div>
                 @for (addressForm of customerForm.addresses; track $index) {
+                  <h4>Address {{$index+1}}</h4>
                   <div class="flex items-center gap-4 mb-4">
                     <label class="w-32 text-sm font-medium text-gray-700">
                       Country:
@@ -143,7 +144,7 @@ export class CustomerCreateForm {
 
   countries: Country[] = [
     {id: 1, name: 'Türkiye', code: '1' ,disabled:false},
-    {id: 2, name: 'ABD', code: '2',disabled: true}
+    {id: 2, name: 'ABD', code: '2',disabled: false}
   ];
 
 
