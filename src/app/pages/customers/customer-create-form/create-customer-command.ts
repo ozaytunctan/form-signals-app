@@ -30,7 +30,6 @@ export const CUSTOMER_ADDRESS_INITIAL_DATA: CreateCustomerAddressCommand = {
   countryId: null,
   zipcode: '',
 }
-
 export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
   firstName: '',
   lastName: '',
@@ -39,7 +38,6 @@ export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
   phone: '',
   addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA}]
 };
-
 export const lastNameSchema = schema<{ lastName: string }>((path) => {
   required(path.lastName, {message: 'Soyad alanı zorunlu.'});
   minLength(path.lastName, 2, {message: 'Soyad minimum 2 karakter olmalı.'});
@@ -52,7 +50,6 @@ export const firstNameSchema = schema<CreateCustomerCommand>(path => {
   minLength(path.firstName, 4, {message: 'Ad alanı minimum 4 karater girilmelidir.'});
   maxLength(path.firstName, 255, {message: 'Ad alanına maksimum 255 karakter girilmelidir.'})
 });
-
 
 export const ADDRESS_SCHEMA = schema<CreateCustomerAddressCommand>((path) => {
   required(path.countryId, {message: "Ülke seçiniz."});
