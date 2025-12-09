@@ -5,7 +5,7 @@ import {hasError} from 'ngExt/core/utils/has-error';
 import {JsonPipe} from '@angular/common';
 import {ValidationErrors} from '@ngExt/ui/validations';
 import {PhoneField} from '@ngExt/ui/inputs/phone-field/phone-field';
-import {FsOption, Listbox} from '@ngExt/ui/inputs/listbox/listbox';
+import {FsOption, FsListbox} from '@ngExt/ui/inputs/listbox/fs-listbox.component';
 import {Country} from 'ngExt/core/models/country';
 
 @Component({
@@ -15,7 +15,7 @@ import {Country} from 'ngExt/core/models/country';
     JsonPipe,
     ValidationErrors,
     PhoneField,
-    Listbox,
+    FsListbox,
     FsOption
   ],
   template: `

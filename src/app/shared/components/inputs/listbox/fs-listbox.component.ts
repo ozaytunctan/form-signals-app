@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, computed, contentChildren, effect, inject, input, model} from '@angular/core';
+import {Component, computed, contentChildren, inject, input, model} from '@angular/core';
 import {FormValueControl} from '@angular/forms/signals';
 
 @Component({
@@ -9,10 +9,11 @@ import {FormValueControl} from '@angular/forms/signals';
   `,
   styles: ``,
   host: {
+    'role': 'listbox',
     'class': 'fs-listbox'
   }
 })
-export class Listbox implements FormValueControl<any> {
+export class FsListbox implements FormValueControl<any> {
   value = model<any>();
   disabled = input<boolean>(false);
   options = contentChildren<FsOption>(FsOption);
@@ -23,14 +24,20 @@ export class Listbox implements FormValueControl<any> {
   selector: `fs-option`,
   template: `
     <ng-content></ng-content>
+    @if (isSelected()) {
+      ✓
+    }
   `,
   host: {
+    'role':'option',
     '(click)': 'selectOption()',
+    '[attr.aria-disabled]': 'isDisabled()',
+    '[attr.aria-selected]': 'isSelected()',
     '[class.selected]': 'isSelected()'
   }
 })
 export class FsOption {
-  private readonly _listbox = inject<Listbox>(Listbox);
+  private readonly _listbox = inject<FsListbox>(FsListbox);
   value = input<any>();
   disabled = input<boolean>(false);
   isDisabled = computed(() => this.disabled() || this._listbox.disabled());
