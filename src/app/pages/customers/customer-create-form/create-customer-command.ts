@@ -37,7 +37,7 @@ export const CREATE_CUSTOMER_INITIAL_DATA: CreateCustomerCommand = {
   email: '',
   age: 20,
   phone: '',
-  addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA}, {...CUSTOMER_ADDRESS_INITIAL_DATA}]
+  addresses: [{...CUSTOMER_ADDRESS_INITIAL_DATA}]
 };
 
 export const lastNameSchema = schema<{ lastName: string }>((path) => {
